@@ -1,25 +1,41 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-async function fetchPosts() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+async function createPost(post) {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(post),
+  });
   return response.json();
 }
 
 const Mutation = () => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
-  });
+  const [title, setTitle] = React.useState("");
+  const [body, setBody] = React.useState("");
+  const { mutate } = useMutation({ mutationFn: createPost });
 
   return (
     <div>
       <h2>Mutation</h2>
-      {isLoading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
-      {data?.map((post) => (
-        <li key={post.id}>{post?.title}</li>
-      ))}
+      <div>
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          placeholder="Body"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        />
+      </div>
+      <button onClick={() => mutate({ title, body, id: 1 })}>
+        Create Post
+      </button>
     </div>
   );
 };
