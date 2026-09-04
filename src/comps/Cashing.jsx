@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
 async function fetchPosts() {
@@ -8,25 +7,35 @@ async function fetchPosts() {
   return await res.json();
 }
 
-const Cashing = () => {
+function PostList() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error occurred while fetching posts.</div>;
+  if (isError) return <p>Error fetching posts</p>;
+  if (isLoading) return <p>Loading...</p>;
 
   return (
+    <ul>
+      {data?.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+
+const Caching = () => {
+  const [showPosts, setShowPosts] = useState(false);
+  return (
     <div>
-      <h1>Caching</h1>
-      <ul>
-        {data?.map((post) => (
-          <li key={post.id}>{post.title}</li>
-        ))}
-      </ul>
+      <h2>Caching</h2>
+      <button onClick={() => setShowPosts(!showPosts)}>
+        {showPosts ? "Hide Posts" : "Show Posts"}
+      </button>
+      {showPosts && <PostList />}
     </div>
   );
 };
 
-export default Cashing;
+export default Caching;
