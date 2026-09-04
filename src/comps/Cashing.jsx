@@ -11,6 +11,9 @@ function PostList() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
+    staleTime: 5000,
+    refetchOnWindowFocus: false,
+    refetchInterval: 3000,
   });
 
   if (isError) return <p>Error fetching posts</p>;

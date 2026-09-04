@@ -8,8 +8,7 @@ function App() {
   return (
     <>
       <h1>Welcome to Vite!</h1>
-      <Examples />
-      <Mutation />
+
       <Cashing />
     </>
   );
